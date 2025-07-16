@@ -4,7 +4,7 @@ import React from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Logs from './components/Logs';
-import { version as dashboardVersion } from './version.js';
+import { version as dashboardVersion } from './version.js'
 
 // Helper to decode JWT (base64 decode, no validation)
 function parseJwt(token: string): any {
