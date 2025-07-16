@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import React from 'react';
 import Sidebar from './components/Sidebar';
@@ -23,6 +23,14 @@ function App() {
   const [debug, setDebug] = useState<any>(null);
   const [apiResponse, setApiResponse] = useState<any>(null);
   const [selectedMenu, setSelectedMenu] = useState<'dashboard' | 'logs'>('dashboard');
+  const [dashboardVersion, setDashboardVersion] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/version.txt')
+      .then(res => res.text())
+      .then(ver => setDashboardVersion(ver.trim()))
+      .catch(() => setDashboardVersion(null));
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,22 +97,29 @@ function App() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar
-        selectedMenu={selectedMenu}
-        setSelectedMenu={setSelectedMenu}
-        role={role}
-        handleLogout={handleLogout}
-      />
-      <div style={{ flex: 1, padding: 32 }}>
-        {selectedMenu === 'dashboard' && (
-          <Dashboard role={role} debug={debug} />
-        )}
-        {selectedMenu === 'logs' && role === 'admin' && jwt && (
-          <Logs jwt={jwt} role={role} />
-        )}
+    <>
+      <div style={{ display: 'flex', minHeight: '100vh' }}>
+        <Sidebar
+          selectedMenu={selectedMenu}
+          setSelectedMenu={setSelectedMenu}
+          role={role}
+          handleLogout={handleLogout}
+        />
+        <div style={{ flex: 1, padding: 32 }}>
+          {selectedMenu === 'dashboard' && (
+            <Dashboard role={role} debug={debug} />
+          )}
+          {selectedMenu === 'logs' && role === 'admin' && jwt && (
+            <Logs jwt={jwt} role={role} />
+          )}
+        </div>
       </div>
-    </div>
+      {dashboardVersion && (
+        <div style={{ position: 'fixed', right: 12, bottom: 8, fontSize: 12, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '2px 10px', borderRadius: 6, zIndex: 1000 }}>
+          v{dashboardVersion}
+        </div>
+      )}
+    </>
   );
 }
 
