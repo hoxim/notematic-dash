@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import './App.css';
+import React from 'react';
+import Sidebar from './components/Sidebar';
+import Dashboard from './components/Dashboard';
+import Logs from './components/Logs';
 
 // Helper to decode JWT (base64 decode, no validation)
 function parseJwt(token: string): any {
@@ -18,6 +22,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [debug, setDebug] = useState<any>(null);
   const [apiResponse, setApiResponse] = useState<any>(null);
+  const [selectedMenu, setSelectedMenu] = useState<'dashboard' | 'logs'>('dashboard');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +53,14 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    setJwt(null);
+    setRole(null);
+    setDebug(null);
+    setApiResponse(null);
+    setSelectedMenu('dashboard');
+  };
+
   if (!jwt) {
     return (
       <div className="login-container">
@@ -76,15 +89,20 @@ function App() {
   }
 
   return (
-    <div className="dashboard-container">
-      <h2>Welcome to Notematic Dashboard</h2>
-      <p>
-        <strong>Role:</strong> {role === 'admin' ? 'admin' : 'user'}
-      </p>
-      <button onClick={() => { setJwt(null); setRole(null); setDebug(null); setApiResponse(null); }}>Logout</button>
-      <div className="debug">
-        <h4>Debug info (decoded JWT):</h4>
-        <pre>{JSON.stringify(debug, null, 2)}</pre>
+    <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <Sidebar
+        selectedMenu={selectedMenu}
+        setSelectedMenu={setSelectedMenu}
+        role={role}
+        handleLogout={handleLogout}
+      />
+      <div style={{ flex: 1, padding: 32 }}>
+        {selectedMenu === 'dashboard' && (
+          <Dashboard role={role} debug={debug} />
+        )}
+        {selectedMenu === 'logs' && role === 'admin' && jwt && (
+          <Logs jwt={jwt} role={role} />
+        )}
       </div>
     </div>
   );
