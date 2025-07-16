@@ -10,7 +10,7 @@ interface SidebarProps {
 // Sidebar menu for navigation
 const Sidebar: React.FC<SidebarProps> = ({ selectedMenu, setSelectedMenu, role, handleLogout }) => {
   return (
-    <div className="sidebar" style={{ width: 220, minWidth: 60, background: '#222', color: '#fff', padding: 24, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start', height: '100vh', boxSizing: 'border-box', position: 'sticky', left: 0, top: 0 }}>
+    <div className="sidebar" style={{ width: 230, minWidth: 60, background: '#222', color: '#fff', padding: 24, display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start', height: '100vh', boxSizing: 'border-box', position: 'sticky', left: 0, top: 0 }}>
       <h3 style={{ color: '#fff', marginBottom: 32, fontSize: 22, letterSpacing: 1 }}>Notematic</h3>
       <button
         style={{ background: selectedMenu === 'dashboard' ? '#444' : 'transparent', color: '#fff', border: 'none', padding: '12px 8px', textAlign: 'left', cursor: 'pointer', borderRadius: 4, width: '100%' }}
