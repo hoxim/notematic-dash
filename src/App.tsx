@@ -4,6 +4,7 @@ import React from 'react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Logs from './components/Logs';
+import { version as dashboardVersion } from './version.js';
 
 // Helper to decode JWT (base64 decode, no validation)
 function parseJwt(token: string): any {
@@ -23,14 +24,6 @@ function App() {
   const [debug, setDebug] = useState<any>(null);
   const [apiResponse, setApiResponse] = useState<any>(null);
   const [selectedMenu, setSelectedMenu] = useState<'dashboard' | 'logs'>('dashboard');
-  const [dashboardVersion, setDashboardVersion] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch('/version.txt')
-      .then(res => res.text())
-      .then(ver => setDashboardVersion(ver.trim()))
-      .catch(() => setDashboardVersion(null));
-  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
