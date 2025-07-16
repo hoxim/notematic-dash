@@ -91,27 +91,58 @@ function App() {
 
   return (
     <>
-      <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: '#222' }}>
         <Sidebar
           selectedMenu={selectedMenu}
           setSelectedMenu={setSelectedMenu}
           role={role}
           handleLogout={handleLogout}
         />
-        <div style={{ flex: 1, padding: 32 }}>
-          {selectedMenu === 'dashboard' && (
-            <Dashboard role={role} debug={debug} />
-          )}
-          {selectedMenu === 'logs' && role === 'admin' && jwt && (
-            <Logs jwt={jwt} role={role} />
-          )}
-        </div>
+        <main
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '24px 8px',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: 800,
+              minHeight: 200,
+              margin: '0 auto',
+              background: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
+            {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
+          </div>
+        </main>
       </div>
       {dashboardVersion && (
         <div style={{ position: 'fixed', right: 12, bottom: 8, fontSize: 12, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '2px 10px', borderRadius: 6, zIndex: 1000 }}>
           v{dashboardVersion}
         </div>
       )}
+      <style>{`
+        @media (max-width: 700px) {
+          .sidebar {
+            width: 60px !important;
+            padding: 12px 4px !important;
+          }
+          main > div {
+            max-width: 98vw !important;
+            padding: 0 !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
