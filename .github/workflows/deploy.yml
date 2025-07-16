@@ -26,13 +26,13 @@ jobs:
         run: |
           npm ci
 
-      - name: Set dashboard version to current date/time
+      - name: Set dashboard version to version/date/time/hash
         run: |
-          date "+%Y-%m-%d %H:%M:%S" > public/version.txt
-
-      - name: Bump patch version in package.json
-        run: |
-          npm version patch --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          DATE=$(date +"%Y.%m.%d")
+          TIME=$(date +"%H:%M:%S")
+          HASH=$(git rev-parse --short HEAD)
+          echo "export const version = 'v$VERSION | $DATE | $TIME | $HASH';" > src/version.js
 
       - name: Build dashboard
         run: |
