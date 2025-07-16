@@ -1,35 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// Helper to decode JWT (base64 decode, no validation)
+function parseJwt(token: string): any {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
+  }
 }
 
-export default App
+function App() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [jwt, setJwt] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setRole(null);
+    setJwt(null);
+    try {
+      const res = await fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) {
+        setError('Login failed');
+        return;
+      }
+      const data = await res.json();
+      setJwt(data.access_token);
+      const decoded = parseJwt(data.access_token);
+      setRole(decoded?.role || 'unknown');
+    } catch (err) {
+      setError('Network error');
+    }
+  };
+
+  if (!jwt) {
+    return (
+      <div className="login-container">
+        <h2>Notematic Dashboard Login</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        {error && <div className="error">{error}</div>}
+      </div>
+    );
+  }
+
+  return (
+    <div className="dashboard-container">
+      <h2>Welcome to Notematic Dashboard</h2>
+      <p>
+        <strong>Role:</strong> {role === 'admin' ? 'admin' : 'user'}
+      </p>
+      <button onClick={() => { setJwt(null); setRole(null); }}>Logout</button>
+    </div>
+  );
+}
+
+export default App;
