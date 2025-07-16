@@ -151,7 +151,7 @@ function App() {
 
   // Main layout with AppBar, Drawer, and main content
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#222', width: '100vw', overflowX: 'hidden' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#222' }}>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: '#181818' }}>
         <Toolbar>
           {isMobile && (
@@ -164,8 +164,8 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
+      {/* Sidebar Drawer, fixed width, no own scroll */}
       <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
-        {/* Drawer for navigation, permanent on desktop, temporary on mobile */}
         <Drawer
           variant={isMobile ? 'temporary' : 'permanent'}
           open={isMobile ? mobileOpen : true}
@@ -184,14 +184,13 @@ function App() {
           {drawer}
         </Drawer>
       </Box>
+      {/* Main content, flex:1, centered, no horizontal scroll */}
       <Box
         component="main"
         sx={{
           flex: 1,
           p: { xs: 1, sm: 3 },
           mt: 8,
-          ml: { md: `${drawerWidth}px` }, // margin left for desktop
-          width: { xs: '100vw', md: `calc(100vw - ${drawerWidth}px)` },
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
@@ -199,8 +198,7 @@ function App() {
           overflowX: 'hidden',
         }}
       >
-        {/* Main content area, max width for dashboard/logs */}
-        <Box sx={{ width: '100%', maxWidth: 800, minHeight: 200, mx: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', maxWidth: 900, minHeight: 200, mx: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
           {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
         </Box>
