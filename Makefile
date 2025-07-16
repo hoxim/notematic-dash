@@ -10,6 +10,7 @@ clean:
 
 # Generate version.js with version, date, time, and git hash
 generate-version:
+	npm version patch --no-git-tag-version
 	@VERSION=$$(node -p "require('./package.json').version") && \
 	DATE=$$(date +"%Y.%m.%d") && \
 	TIME=$$(date +"%H:%M:%S") && \
