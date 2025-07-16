@@ -30,6 +30,10 @@ jobs:
         run: |
           date "+%Y-%m-%d %H:%M:%S" > public/version.txt
 
+      - name: Bump patch version in package.json
+        run: |
+          npm version patch --no-git-tag-version
+
       - name: Build dashboard
         run: |
           npm run build
