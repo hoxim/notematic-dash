@@ -26,7 +26,8 @@ function parseJwt(token: string): any {
   }
 }
 
-const drawerWidth = 220;
+// Drawer width for desktop layout
+const drawerWidth = 240;
 
 function App() {
   const [email, setEmail] = useState('');
@@ -78,6 +79,7 @@ function App() {
     setSelectedMenu('dashboard');
   };
 
+  // Drawer content for navigation and logout
   const drawer = (
     <Box sx={{ width: drawerWidth, display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Typography variant="h6" sx={{ my: 3, ml: 2, fontWeight: 700, letterSpacing: 1 }}>
@@ -147,8 +149,9 @@ function App() {
     );
   }
 
+  // Main layout with AppBar, Drawer, and main content
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#222' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#222', width: '100vw', overflowX: 'hidden' }}>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: '#181818' }}>
         <Toolbar>
           {isMobile && (
@@ -162,7 +165,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
-        {/* Drawer na mobile (wysuwany) */}
+        {/* Drawer for navigation, permanent on desktop, temporary on mobile */}
         <Drawer
           variant={isMobile ? 'temporary' : 'permanent'}
           open={isMobile ? mobileOpen : true}
@@ -187,13 +190,16 @@ function App() {
           flex: 1,
           p: { xs: 1, sm: 3 },
           mt: 8,
-          width: '100%',
+          ml: { md: `${drawerWidth}px` }, // margin left for desktop
+          width: { xs: '100vw', md: `calc(100vw - ${drawerWidth}px)` },
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          overflowX: 'hidden',
         }}
       >
+        {/* Main content area, max width for dashboard/logs */}
         <Box sx={{ width: '100%', maxWidth: 800, minHeight: 200, mx: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
           {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
