@@ -1,10 +1,21 @@
-import { useState } from 'react';
-import './App.css';
-import React from 'react';
-import Sidebar from './components/Sidebar';
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import Dashboard from './components/Dashboard';
 import Logs from './components/Logs';
-import { version as dashboardVersion } from './version.js'
+import { version as dashboardVersion } from './version.js';
 
 // Helper to decode JWT (base64 decode, no validation)
 function parseJwt(token: string): any {
@@ -15,6 +26,8 @@ function parseJwt(token: string): any {
   }
 }
 
+const drawerWidth = 220;
+
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +37,9 @@ function App() {
   const [debug, setDebug] = useState<any>(null);
   const [apiResponse, setApiResponse] = useState<any>(null);
   const [selectedMenu, setSelectedMenu] = useState<'dashboard' | 'logs'>('dashboard');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,88 +78,133 @@ function App() {
     setSelectedMenu('dashboard');
   };
 
+  const drawer = (
+    <Box sx={{ width: drawerWidth, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Typography variant="h6" sx={{ my: 3, ml: 2, fontWeight: 700, letterSpacing: 1 }}>
+        Notematic
+      </Typography>
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton selected={selectedMenu === 'dashboard'} onClick={() => { setSelectedMenu('dashboard'); setMobileOpen(false); }}>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        </ListItem>
+        {role === 'admin' && (
+          <ListItem disablePadding>
+            <ListItemButton selected={selectedMenu === 'logs'} onClick={() => { setSelectedMenu('logs'); setMobileOpen(false); }}>
+              <ListItemText primary="Logs" />
+            </ListItemButton>
+          </ListItem>
+        )}
+      </List>
+      <Box sx={{ flex: 1 }} />
+      <Button
+        variant="contained"
+        color="error"
+        sx={{ m: 2, width: 'calc(100% - 32px)' }}
+        onClick={handleLogout}
+      >
+        Logout
+      </Button>
+    </Box>
+  );
+
   if (!jwt) {
     return (
-      <div className="login-container">
-        <h2>Notematic Dashboard Login</h2>
-        <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit">Login</button>
-        </form>
-        {error && <div className="error">{error}</div>}
-        {apiResponse && <div className="debug">API response: {apiResponse}</div>}
-      </div>
+      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#222' }}>
+        <Box sx={{ width: 340, bgcolor: '#222', p: 4, borderRadius: 2, boxShadow: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2, color: '#fff', textAlign: 'center' }}>Notematic Dashboard Login</Typography>
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              style={{ width: '100%', marginBottom: 12, padding: 10, borderRadius: 4, border: '1px solid #444', background: '#111', color: '#fff' }}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              style={{ width: '100%', marginBottom: 12, padding: 10, borderRadius: 4, border: '1px solid #444', background: '#111', color: '#fff' }}
+            />
+            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 1 }}>
+              Login
+            </Button>
+          </form>
+          {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+          {apiResponse && <Typography color="text.secondary" sx={{ mt: 1, fontSize: 13 }}>API response: {apiResponse}</Typography>}
+        </Box>
+        {dashboardVersion && (
+          <Box sx={{ position: 'fixed', right: 12, bottom: 8, fontSize: 12, color: '#fff', background: 'rgba(0,0,0,0.5)', px: 2, py: 0.5, borderRadius: 6, zIndex: 1000 }}>
+            v{dashboardVersion}
+          </Box>
+        )}
+      </Box>
     );
   }
 
   return (
-    <>
-      <div style={{ display: 'flex', minHeight: '100vh', background: '#222' }}>
-        <Sidebar
-          selectedMenu={selectedMenu}
-          setSelectedMenu={setSelectedMenu}
-          role={role}
-          handleLogout={handleLogout}
-        />
-        <main
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding: '24px 8px',
-            width: '100%',
-            boxSizing: 'border-box',
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#222' }}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, bgcolor: '#181818' }}>
+        <Toolbar>
+          {isMobile && (
+            <IconButton color="inherit" edge="start" onClick={() => setMobileOpen(true)} sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+          )}
+          <Typography variant="h6" noWrap component="div">
+            Notematic
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
+        {/* Drawer na mobile (wysuwany) */}
+        <Drawer
+          variant={isMobile ? 'temporary' : 'permanent'}
+          open={isMobile ? mobileOpen : true}
+          onClose={() => setMobileOpen(false)}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            display: { xs: 'block', md: 'block' },
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+              bgcolor: '#222',
+              color: '#fff',
+            },
           }}
         >
-          <div
-            style={{
-              width: '100%',
-              maxWidth: 800,
-              minHeight: 200,
-              margin: '0 auto',
-              background: 'none',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
-            {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
-          </div>
-        </main>
-      </div>
-      {dashboardVersion && (
-        <div style={{ position: 'fixed', right: 12, bottom: 8, fontSize: 12, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '2px 10px', borderRadius: 6, zIndex: 1000 }}>
-          v{dashboardVersion}
-        </div>
-      )}
-      <style>{`
-        @media (max-width: 700px) {
-          .sidebar {
-            width: 60px !important;
-            padding: 12px 4px !important;
-          }
-          main > div {
-            max-width: 98vw !important;
-            padding: 0 !important;
-          }
-        }
-      `}</style>
-    </>
+          {drawer}
+        </Drawer>
+      </Box>
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          p: { xs: 1, sm: 3 },
+          mt: 8,
+          width: '100%',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Box sx={{ width: '100%', maxWidth: 800, minHeight: 200, mx: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
+          {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
+        </Box>
+        {dashboardVersion && (
+          <Box sx={{ position: 'fixed', right: 12, bottom: 8, fontSize: 12, color: '#fff', background: 'rgba(0,0,0,0.5)', px: 2, py: 0.5, borderRadius: 6, zIndex: 1000 }}>
+            v{dashboardVersion}
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }
 
