@@ -18,7 +18,6 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedMenu, setSelectedMenu, role, 
       >
         Dashboard
       </button>
-      <button class="btn">Button</button>
       {role === 'admin' && (
         <button
           style={{ background: selectedMenu === 'logs' ? '#444' : 'transparent', color: '#fff', border: 'none', padding: '12px 8px', textAlign: 'left', cursor: 'pointer', borderRadius: 4, width: '100%' }}
