@@ -1,7 +1,4 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
 // Login form component, centered on the page
 interface LoginProps {
@@ -17,9 +14,9 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, handleLogin, error, apiResponse, dashboardVersion }) => {
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#222' }}>
-      <Box sx={{ width: 340, bgcolor: '#222', p: 4, borderRadius: 2, boxShadow: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: '#fff', textAlign: 'center' }}>Notematic Dashboard Login</Typography>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="w-80 bg-gray-800 p-8 rounded-lg shadow-xl">
+        <h2 className="text-xl font-semibold text-white text-center mb-6">Notematic Dashboard Login</h2>
         <form onSubmit={handleLogin}>
           <input
             type="email"
@@ -27,7 +24,7 @@ const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, h
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            style={{ width: '100%', marginBottom: 12, padding: 10, borderRadius: 4, border: '1px solid #444', background: '#111', color: '#fff' }}
+            className="input-field mb-3"
           />
           <input
             type="password"
@@ -35,21 +32,21 @@ const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, h
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            style={{ width: '100%', marginBottom: 12, padding: 10, borderRadius: 4, border: '1px solid #444', background: '#111', color: '#fff' }}
+            className="input-field mb-4"
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 1 }}>
+          <button type="submit" className="btn-primary w-full">
             Login
-          </Button>
+          </button>
         </form>
-        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
-        {apiResponse && <Typography color="text.secondary" sx={{ mt: 1, fontSize: 13 }}>API response: {apiResponse}</Typography>}
-      </Box>
+        {error && <p className="text-red-400 mt-4 text-sm">{error}</p>}
+        {apiResponse && <p className="text-gray-400 mt-2 text-xs">API response: {apiResponse}</p>}
+      </div>
       {dashboardVersion && (
-        <Box sx={{ position: 'fixed', right: 12, bottom: 8, fontSize: 12, color: '#fff', background: 'rgba(0,0,0,0.5)', px: 2, py: 0.5, borderRadius: 6, zIndex: 1000 }}>
+        <div className="fixed bottom-2 right-3 text-xs text-white bg-black bg-opacity-50 px-2 py-1 rounded z-50">
           v{dashboardVersion}
-        </Box>
+        </div>
       )}
-    </Box>
+    </div>
   );
 };
 

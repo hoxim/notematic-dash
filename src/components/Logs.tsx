@@ -1,5 +1,4 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 
 // Props for Logs component
 interface LogsProps {
@@ -39,31 +38,16 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
   if (role !== 'admin') return null;
 
   return (
-    <Box sx={{ width: '100%', maxWidth: '100%', overflowX: 'auto' }}>
-      <h2>Logs</h2>
-      {logsLoading && <div>Loading logs...</div>}
-      {logsError && <div className="error">{logsError}</div>}
+    <div className="w-full max-w-full overflow-x-auto">
+      <h2 className="text-2xl font-bold text-white mb-4">Logs</h2>
+      {logsLoading && <div className="text-gray-300 mb-4">Loading logs...</div>}
+      {logsError && <div className="text-red-400 mb-4">{logsError}</div>}
       {logs && (
-        <Box
-          component="pre"
-          sx={{
-            background: '#111',
-            color: '#0f0',
-            padding: 2,
-            borderRadius: 2,
-            maxHeight: 500,
-            overflow: 'auto',
-            width: '100%',
-            maxWidth: '100%',
-            fontFamily: 'monospace',
-            fontSize: '1rem',
-            boxSizing: 'border-box',
-          }}
-        >
+        <div className="bg-gray-900 text-green-400 p-4 rounded border border-gray-700 max-h-96 overflow-auto w-full max-w-full font-mono text-sm">
           {logs.length === 0 ? 'No logs found.' : logs.join('\n')}
-        </Box>
+        </div>
       )}
-    </Box>
+    </div>
   );
 };
 
