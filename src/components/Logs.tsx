@@ -43,18 +43,18 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
       {logsLoading && <div className="text-gray-300 mb-4">Loading logs...</div>}
       {logsError && <div className="text-red-400 mb-4">{logsError}</div>}
       {logs && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
-          <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
-            <span className="text-gray-300 text-sm font-medium">System Logs</span>
+        <div className="bg-stone-900 border border-stone-700 rounded-lg overflow-hidden">
+          <div className="bg-stone-800 px-4 py-2 border-b border-stone-700">
+            <span className="text-stone-300 text-sm font-medium">System Logs</span>
           </div>
           <div className="max-h-[70vh] overflow-y-auto p-4">
             <div className="font-mono text-sm text-green-400 leading-relaxed">
               {logs.length === 0 ? (
-                <div className="text-gray-400 italic">No logs found.</div>
+                <div className="text-stone-400 italic">No logs found.</div>
               ) : (
                 logs.map((log, index) => (
                   <div key={index} className="mb-2 break-all">
-                    <span className="text-gray-500 mr-2 select-none">[{index + 1}]</span>
+                    <span className="text-stone-500 mr-2 select-none">[{index + 1}]</span>
                     <span className="whitespace-pre-wrap">{log}</span>
                   </div>
                 ))

@@ -68,7 +68,7 @@ function App() {
 
   // Drawer content for navigation and logout
   const drawer = (
-    <div className="w-60 flex flex-col bg-gray-800">
+    <div className="w-60 flex flex-col h-screen bg-stone-800">
       <h1 className="text-xl font-bold text-white my-8 ml-4 tracking-wide">Notematic</h1>
       <nav className="flex-1">
         <ul className="space-y-1">
@@ -76,8 +76,8 @@ function App() {
             <button
               className={`w-full text-left px-4 py-3 rounded-lg mx-2 transition-all duration-200 ${
                 selectedMenu === 'dashboard' 
-                  ? 'bg-gray-700 text-white' 
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  ? 'bg-stone-700 text-white' 
+                  : 'text-stone-300 hover:bg-stone-700 hover:text-white'
               }`}
               onClick={() => setSelectedMenu('dashboard')}
             >
@@ -89,8 +89,8 @@ function App() {
               <button
                 className={`w-full text-left px-4 py-3 rounded-lg mx-2 transition-all duration-200 ${
                   selectedMenu === 'logs' 
-                    ? 'bg-gray-700 text-white' 
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-stone-700 text-white' 
+                    : 'text-stone-300 hover:bg-stone-700 hover:text-white'
                 }`}
                 onClick={() => setSelectedMenu('logs')}
               >
@@ -130,12 +130,12 @@ function App() {
 
   // Main layout with AppBar, Drawer, and main content
   return (
-    <div className="flex min-h-screen bg-gray-950">
+    <div className="flex min-h-screen bg-stone-950">
       {/* Top navigation bar */}
-      <header className="fixed top-0 left-0 right-0 bg-gray-900 z-50">
+      <header className="fixed top-0 left-0 right-0 bg-stone-900 z-50">
         <div className="flex items-center px-4 py-2">
           <button
-            className="md:hidden mr-4 p-2 text-white hover:bg-gray-800 rounded"
+            className="md:hidden mr-4 p-2 text-white hover:bg-stone-800 rounded"
             onClick={() => setMobileOpen(true)}
           >
             <MenuIcon />
@@ -145,7 +145,7 @@ function App() {
       </header>
 
       {/* Sidebar Drawer, fixed width, no own scroll */}
-      <aside className="w-60 flex-shrink-0 bg-gray-900 flex flex-col">
+      <aside className="w-60 flex-shrink-0 bg-stone-800 flex flex-col">
         {drawer}
       </aside>
 

@@ -16,14 +16,14 @@
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    @apply bg-gray-950 text-gray-100;
+    @apply bg-stone-950 text-stone-100;
   }
 }
 
 /* Custom component styles */
 @layer components {
   .btn-primary {
-    @apply bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition-colors;
+    @apply bg-stone-700 hover:bg-stone-600 text-white font-medium py-2 px-4 rounded transition-colors;
   }
 
   .btn-error {
@@ -31,10 +31,10 @@
   }
 
   .input-field {
-    @apply w-full p-3 rounded border border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:border-gray-500;
+    @apply w-full p-3 rounded border border-stone-600 bg-stone-800 text-white placeholder-stone-400 focus:outline-none focus:border-stone-500;
   }
 
   .card {
-    @apply bg-gray-800 rounded-lg shadow-lg p-6;
+    @apply bg-stone-800 rounded-lg shadow-lg p-6;
   }
 }
