@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from './Button';
 
 // Login form component, centered on the page
 interface LoginProps {
@@ -17,14 +18,14 @@ const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, h
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="w-80 bg-gray-800 p-8 rounded-lg shadow-xl">
         <h2 className="text-xl font-semibold text-white text-center mb-6">Notematic Dashboard Login</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            className="input-field mb-3"
+            className="w-full p-3 rounded border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
           <input
             type="password"
@@ -32,11 +33,11 @@ const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, h
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            className="input-field mb-4"
+            className="w-full p-3 rounded border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
-          <button type="submit" className="btn-primary w-full">
+          <Button type="submit" className="w-full">
             Login
-          </button>
+          </Button>
         </form>
         {error && <p className="text-red-400 mt-4 text-sm">{error}</p>}
         {apiResponse && <p className="text-gray-400 mt-2 text-xs">API response: {apiResponse}</p>}

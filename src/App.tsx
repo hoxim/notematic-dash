@@ -3,6 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Dashboard from './components/Dashboard';
 import Logs from './components/Logs';
 import Login from './components/Login';
+import Button from './components/Button';
 import { version as dashboardVersion } from './version.js';
 
 // Helper to decode JWT (base64 decode, no validation)
@@ -67,14 +68,16 @@ function App() {
 
   // Drawer content for navigation and logout
   const drawer = (
-    <div className="w-60 flex flex-col h-full">
+    <div className="w-60 flex flex-col h-full bg-gray-800">
       <h1 className="text-xl font-bold text-white my-8 ml-4 tracking-wide">Notematic</h1>
       <nav className="flex-1">
-        <ul>
+        <ul className="space-y-1">
           <li>
             <button
-              className={`w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors ${
-                selectedMenu === 'dashboard' ? 'bg-gray-700' : ''
+              className={`w-full text-left px-4 py-3 rounded-lg mx-2 transition-all duration-200 ${
+                selectedMenu === 'dashboard' 
+                  ? 'bg-blue-600 text-white shadow-lg' 
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
               }`}
               onClick={() => setSelectedMenu('dashboard')}
             >
@@ -84,8 +87,10 @@ function App() {
           {role === 'admin' && (
             <li>
               <button
-                className={`w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors ${
-                  selectedMenu === 'logs' ? 'bg-gray-700' : ''
+                className={`w-full text-left px-4 py-3 rounded-lg mx-2 transition-all duration-200 ${
+                  selectedMenu === 'logs' 
+                    ? 'bg-blue-600 text-white shadow-lg' 
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                 }`}
                 onClick={() => setSelectedMenu('logs')}
               >
@@ -95,12 +100,15 @@ function App() {
           )}
         </ul>
       </nav>
-      <button
-        className="btn-error mx-4 mb-4 w-52"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
+      <div className="p-4">
+        <Button 
+          variant="danger" 
+          className="w-full" 
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </div>
     </div>
   );
 
@@ -137,7 +145,7 @@ function App() {
       </header>
 
       {/* Sidebar Drawer, fixed width, no own scroll */}
-      <aside className="w-60 flex-shrink-0 bg-gray-800">
+      <aside className="w-60 flex-shrink-0 bg-gray-800 flex flex-col">
         {drawer}
       </aside>
 
