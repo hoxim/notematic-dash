@@ -6,6 +6,12 @@ interface LogsProps {
   role: string | null;
 }
 
+// Typ pliku logu
+interface LogFileInfo {
+  name: string;
+  modified: string;
+}
+
 // Logs view for admin, fetches and displays logs from API
 const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
   // State for logs, error, loading, and auto-refresh
@@ -13,6 +19,12 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
   const [logsError, setLogsError] = React.useState<string | null>(null);
   const [logsLoading, setLogsLoading] = React.useState<boolean>(false);
   const [autoRefresh, setAutoRefresh] = React.useState<boolean>(false);
+
+  // State for log files
+  const [logFiles, setLogFiles] = React.useState<LogFileInfo[]>([]);
+  const [selectedFile, setSelectedFile] = React.useState<string | null>(null);
+  const [logFilesLoading, setLogFilesLoading] = React.useState<boolean>(false);
+  const [logFilesError, setLogFilesError] = React.useState<string | null>(null);
 
   // Helper to extract and format timestamp from log line
   const formatLogLine = (log: string) => {
@@ -27,12 +39,46 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
     return { ts: '', rest: log };
   };
 
-  // Fetch logs from API
-  const fetchLogs = React.useCallback(() => {
+  // Fetch log files list
+  const fetchLogFiles = React.useCallback(() => {
     if (role === 'admin' && jwt) {
+      setLogFilesLoading(true);
+      setLogFilesError(null);
+      fetch('http://192.109.245.95:8080/admin/logfiles', {
+        headers: { 'Authorization': `Bearer ${jwt}` },
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch log files');
+          return res.json();
+        })
+        .then(data => {
+          if (Array.isArray(data.logfiles)) {
+            setLogFiles(data.logfiles);
+            if (!selectedFile && data.logfiles.length > 0) {
+              setSelectedFile(data.logfiles[0].name);
+            }
+          } else {
+            setLogFiles([]);
+          }
+        })
+        .catch(() => {
+          setLogFilesError('Could not load log files');
+        })
+        .finally(() => setLogFilesLoading(false));
+    }
+  }, [jwt, role, selectedFile]);
+
+  // Fetch log files on mount and when jwt/role changes
+  React.useEffect(() => {
+    fetchLogFiles();
+  }, [fetchLogFiles]);
+
+  // Fetch logs from API (dla wybranego pliku)
+  const fetchLogs = React.useCallback(() => {
+    if (role === 'admin' && jwt && selectedFile) {
       setLogsLoading(true);
       setLogsError(null);
-      fetch('http://192.109.245.95:8080/admin/logs', {
+      fetch(`http://192.109.245.95:8080/admin/logs?file=${encodeURIComponent(selectedFile)}`, {
         headers: { 'Authorization': `Bearer ${jwt}` },
       })
         .then(res => {
@@ -57,9 +103,9 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
         })
         .finally(() => setLogsLoading(false));
     }
-  }, [jwt, role]);
+  }, [jwt, role, selectedFile]);
 
-  // Fetch logs on mount and when jwt/role changes
+  // Fetch logs on mount, when jwt/role/selectedFile changes
   React.useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
@@ -93,6 +139,27 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
           />
           <span className="text-base-content">Auto-refresh (1s)</span>
         </label>
+        {/* Dropdown z plikami logów */}
+        <div>
+          {logFilesLoading ? (
+            <span className="text-base-content opacity-70">Loading log files...</span>
+          ) : logFilesError ? (
+            <span className="alert alert-error">{logFilesError}</span>
+          ) : (
+            <select
+              className="select select-bordered select-sm"
+              value={selectedFile || ''}
+              onChange={e => setSelectedFile(e.target.value)}
+              disabled={logFiles.length === 0}
+            >
+              {logFiles.map(f => (
+                <option key={f.name} value={f.name}>
+                  {f.name} ({new Date(f.modified).toLocaleString()})
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
       {logsLoading && <div className="text-base-content opacity-70 mb-4">Loading logs...</div>}
       {logsError && <div className="alert alert-error mb-4">
