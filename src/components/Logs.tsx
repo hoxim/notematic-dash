@@ -39,25 +39,26 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold text-white mb-4">Logs</h2>
-      {logsLoading && <div className="text-gray-300 mb-4">Loading logs...</div>}
-      {logsError && <div className="text-red-400 mb-4">{logsError}</div>}
+      <h2 className="text-2xl font-bold text-base-content mb-4">Logs</h2>
+      {logsLoading && <div className="text-base-content opacity-70 mb-4">Loading logs...</div>}
+      {logsError && <div className="alert alert-error mb-4">
+        <span>{logsError}</span>
+      </div>}
       {logs && (
-        <div className="bg-stone-900 border border-stone-700 rounded-lg overflow-hidden">
-          <div className="bg-stone-800 px-4 py-2 border-b border-stone-700">
-            <span className="text-stone-300 text-sm font-medium">System Logs</span>
-          </div>
-          <div className="max-h-[70vh] overflow-y-auto p-4">
-            <div className="font-mono text-sm text-green-400 leading-relaxed">
+        <div className="card bg-base-200 shadow-xl">
+          <div className="card-body">
+            <h3 className="card-title text-base-content">System Logs</h3>
+            <div className="max-h-[70vh] overflow-y-auto">
               {logs.length === 0 ? (
-                <div className="text-stone-400 italic">No logs found.</div>
+                <div className="text-base-content opacity-50 italic">No logs found.</div>
               ) : (
-                logs.map((log, index) => (
-                  <div key={index} className="mb-2 break-all">
-                    <span className="text-stone-500 mr-2 select-none">[{index + 1}]</span>
-                    <span className="whitespace-pre-wrap">{log}</span>
-                  </div>
-                ))
+                <div className="mockup-code bg-base-300">
+                  {logs.map((log, index) => (
+                    <pre key={index} data-prefix={`[${index + 1}]`}>
+                      <code className="text-success">{log}</code>
+                    </pre>
+                  ))}
+                </div>
               )}
             </div>
           </div>

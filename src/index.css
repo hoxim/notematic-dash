@@ -16,25 +16,5 @@
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    @apply bg-stone-950 text-stone-100;
-  }
-}
-
-/* Custom component styles */
-@layer components {
-  .btn-primary {
-    @apply bg-stone-700 hover:bg-stone-600 text-white font-medium py-2 px-4 rounded transition-colors;
-  }
-
-  .btn-error {
-    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors;
-  }
-
-  .input-field {
-    @apply w-full p-3 rounded border border-stone-600 bg-stone-800 text-white placeholder-stone-400 focus:outline-none focus:border-stone-500;
-  }
-
-  .card {
-    @apply bg-stone-800 rounded-lg shadow-lg p-6;
   }
 }

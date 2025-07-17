@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Dashboard from './components/Dashboard';
 import Logs from './components/Logs';
 import Login from './components/Login';
-import Button from './components/Button';
 import { version as dashboardVersion } from './version.js';
 
 // Helper to decode JWT (base64 decode, no validation)
@@ -68,46 +70,54 @@ function App() {
 
   // Drawer content for navigation and logout
   const drawer = (
-    <div className="w-60 flex flex-col h-screen bg-stone-800">
-      <h1 className="text-xl font-bold text-white my-8 ml-4 tracking-wide">Notematic</h1>
+    <div className="w-60 flex flex-col h-screen bg-base-200">
+      <h1 className="text-xl font-bold text-base-content my-8 ml-4 tracking-wide">Notematic</h1>
+      
+      {/* Main Navigation Section */}
       <nav className="flex-1">
-        <ul className="space-y-1">
+        <ul className="menu menu-lg">
           <li>
             <button
-              className={`w-full text-left px-4 py-3 rounded-lg mx-2 transition-all duration-200 ${
+              className={`w-full text-left transition-all duration-200 flex items-center ${
                 selectedMenu === 'dashboard' 
-                  ? 'bg-stone-700 text-white' 
-                  : 'text-stone-300 hover:bg-stone-700 hover:text-white'
+                  ? 'active bg-primary text-primary-content' 
+                  : 'text-base-content hover:bg-base-300'
               }`}
               onClick={() => setSelectedMenu('dashboard')}
             >
+              <DashboardIcon className="mr-3 text-lg" />
               Dashboard
             </button>
           </li>
           {role === 'admin' && (
             <li>
               <button
-                className={`w-full text-left px-4 py-3 rounded-lg mx-2 transition-all duration-200 ${
+                className={`w-full text-left transition-all duration-200 flex items-center ${
                   selectedMenu === 'logs' 
-                    ? 'bg-stone-700 text-white' 
-                    : 'text-stone-300 hover:bg-stone-700 hover:text-white'
+                    ? 'active bg-primary text-primary-content' 
+                    : 'text-base-content hover:bg-base-300'
                 }`}
                 onClick={() => setSelectedMenu('logs')}
               >
+                <AssessmentIcon className="mr-3 text-lg" />
                 Logs
               </button>
-            </li>
+          </li>
           )}
         </ul>
       </nav>
-      <div className="p-4">
-        <Button 
-          variant="danger" 
-          className="w-full" 
-          onClick={handleLogout}
-        >
-          Logout
-        </Button>
+
+      {/* Settings/Logout Section */}
+      <div className="border-t border-base-300">
+        <div className="p-4">
+          <button
+            className="btn btn-ghost w-full justify-start text-base-content hover:bg-base-300"
+            onClick={handleLogout}
+          >
+            <LogoutIcon className="mr-3 text-lg" />
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -130,22 +140,24 @@ function App() {
 
   // Main layout with AppBar, Drawer, and main content
   return (
-    <div className="flex min-h-screen bg-stone-950">
+    <div className="flex min-h-screen bg-base-100" data-theme="dark">
       {/* Top navigation bar */}
-      <header className="fixed top-0 left-0 right-0 bg-stone-900 z-50">
-        <div className="flex items-center px-4 py-2">
-          <button
-            className="md:hidden mr-4 p-2 text-white hover:bg-stone-800 rounded"
-            onClick={() => setMobileOpen(true)}
-          >
-            <MenuIcon />
-          </button>
-          <h1 className="text-lg font-semibold text-white">Notematic</h1>
+      <header className="fixed top-0 left-0 right-0 bg-base-200 z-50">
+        <div className="navbar">
+          <div className="navbar-start">
+            <button
+              className="btn btn-ghost lg:hidden"
+              onClick={() => setMobileOpen(true)}
+            >
+              <MenuIcon />
+            </button>
+            <h1 className="text-lg font-semibold text-base-content">Notematic</h1>
+          </div>
         </div>
       </header>
 
       {/* Sidebar Drawer, fixed width, no own scroll */}
-      <aside className="w-60 flex-shrink-0 bg-stone-800 flex flex-col">
+      <aside className="w-60 flex-shrink-0 bg-base-200 flex flex-col">
         {drawer}
       </aside>
 
@@ -156,7 +168,7 @@ function App() {
           {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
         </div>
         {dashboardVersion && (
-          <div className="fixed bottom-2 right-3 text-xs text-white bg-black bg-opacity-50 px-2 py-1 rounded z-50">
+          <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
             v{dashboardVersion}
           </div>
         )}
