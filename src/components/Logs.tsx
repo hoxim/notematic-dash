@@ -48,13 +48,13 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
         <div className="card bg-base-200 shadow-xl">
           <div className="card-body">
             <h3 className="card-title text-base-content">System Logs</h3>
-            <div className="max-h-[70vh] overflow-y-auto">
+            <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden">
               {logs.length === 0 ? (
                 <div className="text-base-content opacity-50 italic">No logs found.</div>
               ) : (
                 <div className="mockup-code bg-base-300">
                   {logs.map((log, index) => (
-                    <pre key={index} data-prefix={`[${index + 1}]`}>
+                    <pre key={index} data-prefix={`[${index + 1}]`} className="break-words whitespace-pre-wrap">
                       <code className="text-success">{log}</code>
                     </pre>
                   ))}

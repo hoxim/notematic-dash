@@ -70,7 +70,7 @@ function App() {
 
   // Drawer content for navigation and logout
   const drawer = (
-    <div className="w-60 flex flex-col h-screen bg-base-200">
+    <div className="w-60 flex flex-col bg-base-200">
       <h1 className="text-xl font-bold text-base-content my-8 ml-4 tracking-wide">Notematic</h1>
       
       {/* Main Navigation Section */}
