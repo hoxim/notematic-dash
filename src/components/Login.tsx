@@ -15,8 +15,8 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, handleLogin, error, apiResponse, dashboardVersion }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="w-80 bg-gray-800 p-8 rounded-lg shadow-xl">
+    <div className="min-h-screen flex items-center justify-center bg-gray-950">
+      <div className="w-80 bg-gray-900 p-8 rounded-lg shadow-xl">
         <h2 className="text-xl font-semibold text-white text-center mb-6">Notematic Dashboard Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
@@ -25,7 +25,7 @@ const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, h
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            className="w-full p-3 rounded border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full p-3 rounded border border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
           />
           <input
             type="password"
@@ -33,7 +33,7 @@ const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, h
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            className="w-full p-3 rounded border border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full p-3 rounded border border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500"
           />
           <Button type="submit" className="w-full">
             Login
