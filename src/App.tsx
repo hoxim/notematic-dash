@@ -83,7 +83,10 @@ function App() {
                   ? 'active bg-primary text-primary-content' 
                   : 'text-base-content hover:bg-base-300'
               }`}
-              onClick={() => setSelectedMenu('dashboard')}
+              onClick={() => {
+                setSelectedMenu('dashboard');
+                setMobileOpen(false);
+              }}
             >
               <DashboardIcon className="mr-3 text-lg" />
               Dashboard
@@ -97,7 +100,10 @@ function App() {
                     ? 'active bg-primary text-primary-content' 
                     : 'text-base-content hover:bg-base-300'
                 }`}
-                onClick={() => setSelectedMenu('logs')}
+                onClick={() => {
+                  setSelectedMenu('logs');
+                  setMobileOpen(false);
+                }}
               >
                 <AssessmentIcon className="mr-3 text-lg" />
                 Logs
@@ -112,7 +118,10 @@ function App() {
         <div className="p-4">
           <button
             className="btn btn-ghost w-full justify-start text-base-content hover:bg-base-300"
-            onClick={handleLogout}
+            onClick={() => {
+              handleLogout();
+              setMobileOpen(false);
+            }}
           >
             <LogoutIcon className="mr-3 text-lg" />
             Logout
@@ -156,23 +165,51 @@ function App() {
         </div>
       </header>
 
-      {/* Sidebar Drawer, fixed width, no own scroll */}
-      <aside className="w-60 flex-shrink-0 bg-base-200 flex flex-col">
-        {drawer}
-      </aside>
-
-      {/* Main content, flex:1, centered, no horizontal scroll */}
-      <main className="flex-1 p-4 md:p-8 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
-        <div className="w-full max-w-4xl min-h-48 mx-auto flex flex-col items-center">
-          {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
-          {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
+      {/* Mobile Drawer */}
+      <div className="drawer lg:hidden">
+        <input id="mobile-drawer" type="checkbox" className="drawer-toggle" checked={mobileOpen} onChange={(e) => setMobileOpen(e.target.checked)} />
+        <div className="drawer-content">
+          {/* Main content for mobile */}
+          <main className="flex-1 p-4 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
+            <div className="w-full mx-auto flex flex-col items-center">
+              {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
+              {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
+            </div>
+            {dashboardVersion && (
+              <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
+                v{dashboardVersion}
+              </div>
+            )}
+          </main>
         </div>
-        {dashboardVersion && (
-          <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
-            v{dashboardVersion}
+        <div className="drawer-side">
+          <label htmlFor="mobile-drawer" className="drawer-overlay"></label>
+          <aside className="w-60 bg-base-200">
+            {drawer}
+          </aside>
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex w-full">
+        {/* Sidebar Drawer, fixed width, no own scroll */}
+        <aside className="w-60 flex-shrink-0 bg-base-200 flex flex-col">
+          {drawer}
+        </aside>
+
+        {/* Main content, flex:1, centered, no horizontal scroll */}
+        <main className="flex-1 p-4 md:p-8 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
+          <div className="w-full mx-auto flex flex-col items-center">
+            {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
+            {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
           </div>
-        )}
-      </main>
+          {dashboardVersion && (
+            <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
+              v{dashboardVersion}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
