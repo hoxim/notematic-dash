@@ -17,9 +17,6 @@ function parseJwt(token: string): any {
   }
 }
 
-// Drawer width for desktop layout
-const drawerWidth = 240;
-
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +26,7 @@ function App() {
   const [debug, setDebug] = useState<any>(null);
   const [apiResponse, setApiResponse] = useState<any>(null);
   const [selectedMenu, setSelectedMenu] = useState<'dashboard' | 'logs'>('dashboard');
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,11 +63,12 @@ function App() {
     setDebug(null);
     setApiResponse(null);
     setSelectedMenu('dashboard');
+    setSidebarOpen(false);
   };
 
   // Drawer content for navigation and logout
   const drawer = (
-    <div className="w-60 flex flex-col bg-base-200">
+    <div className="w-60 flex flex-col bg-base-200 h-full">
       <h1 className="text-xl font-bold text-base-content my-8 ml-4 tracking-wide">Notematic</h1>
       
       {/* Main Navigation Section */}
@@ -85,7 +83,7 @@ function App() {
               }`}
               onClick={() => {
                 setSelectedMenu('dashboard');
-                setMobileOpen(false);
+                setSidebarOpen(false);
               }}
             >
               <DashboardIcon className="mr-3 text-lg" />
@@ -102,7 +100,7 @@ function App() {
                 }`}
                 onClick={() => {
                   setSelectedMenu('logs');
-                  setMobileOpen(false);
+                  setSidebarOpen(false);
                 }}
               >
                 <AssessmentIcon className="mr-3 text-lg" />
@@ -120,7 +118,7 @@ function App() {
             className="btn btn-ghost w-full justify-start text-base-content hover:bg-base-300"
             onClick={() => {
               handleLogout();
-              setMobileOpen(false);
+              setSidebarOpen(false);
             }}
           >
             <LogoutIcon className="mr-3 text-lg" />
@@ -147,7 +145,7 @@ function App() {
     );
   }
 
-  // Main layout with AppBar, Drawer, and main content
+  // Main layout with responsive sidebar
   return (
     <div className="flex h-screen bg-base-100 overflow-hidden" data-theme="dark">
       {/* Top navigation bar */}
@@ -156,7 +154,7 @@ function App() {
           <div className="navbar-start">
             <button
               className="btn btn-ghost lg:hidden"
-              onClick={() => setMobileOpen(true)}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
             >
               <MenuIcon />
             </button>
@@ -165,51 +163,33 @@ function App() {
         </div>
       </header>
 
-      {/* Mobile Drawer */}
-      <div className="drawer lg:hidden">
-        <input id="mobile-drawer" type="checkbox" className="drawer-toggle" checked={mobileOpen} onChange={(e) => setMobileOpen(e.target.checked)} />
-        <div className="drawer-content">
-          {/* Main content for mobile */}
-          <main className="flex-1 p-4 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
-            <div className="w-full mx-auto flex flex-col items-center">
-              {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
-              {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
-            </div>
-            {dashboardVersion && (
-              <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
-                v{dashboardVersion}
-              </div>
-            )}
-          </main>
-        </div>
-        <div className="drawer-side">
-          <label htmlFor="mobile-drawer" className="drawer-overlay"></label>
-          <aside className="w-60 bg-base-200">
-            {drawer}
-          </aside>
-        </div>
-      </div>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-      {/* Desktop Layout */}
-      <div className="hidden lg:flex w-full">
-        {/* Sidebar Drawer, fixed width, no own scroll */}
-        <aside className="w-60 flex-shrink-0 bg-base-200 flex flex-col">
-          {drawer}
-        </aside>
+      {/* Sidebar */}
+      <aside className={`fixed top-0 left-0 h-full z-50 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        {drawer}
+      </aside>
 
-        {/* Main content, flex:1, centered, no horizontal scroll */}
-        <main className="flex-1 p-4 md:p-8 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
-          <div className="w-full mx-auto flex flex-col items-center">
-            {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
-            {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
+      {/* Main content */}
+      <main className="flex-1 p-4 md:p-8 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
+        <div className="w-full mx-auto flex flex-col items-center">
+          {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
+          {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}
+        </div>
+        {dashboardVersion && (
+          <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
+            v{dashboardVersion}
           </div>
-          {dashboardVersion && (
-            <div className="fixed bottom-2 right-3 text-xs text-base-content bg-base-300 bg-opacity-50 px-2 py-1 rounded z-50">
-              v{dashboardVersion}
-            </div>
-          )}
-        </main>
-      </div>
+        )}
+      </main>
     </div>
   );
 }
