@@ -40,7 +40,17 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
           return res.json();
         })
         .then(data => {
-          setLogs(Array.isArray(data.logs) ? data.logs : []);
+          // Porównaj nowe logi z poprzednimi, nie aktualizuj jeśli identyczne
+          if (Array.isArray(data.logs)) {
+            setLogs(prev => {
+              if (prev && prev.length === data.logs.length && prev.every((l, i) => l === data.logs[i])) {
+                return prev; // nie zmieniaj stanu
+              }
+              return data.logs;
+            });
+          } else {
+            setLogs([]);
+          }
         })
         .catch(() => {
           setLogsError('Could not load logs');
@@ -100,7 +110,8 @@ const Logs: React.FC<LogsProps> = ({ jwt, role }) => {
                   {logs.map((log, index) => {
                     const { ts, rest } = formatLogLine(log);
                     return (
-                      <pre key={index} data-prefix={`[${index + 1}]`} className="break-words whitespace-pre-wrap">
+                      <pre key={index} data-prefix={undefined} className="break-words whitespace-pre-wrap flex items-start">
+                        <span style={{ minWidth: 48, display: 'inline-block', color: '#888', textAlign: 'right', marginRight: 8 }}>[{index + 1}]</span>
                         <code className="text-success">
                           {ts && <span className="text-info">[{ts}] </span>}{rest}
                         </code>
