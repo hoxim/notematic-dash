@@ -140,7 +140,7 @@ function App() {
 
   // Main layout with AppBar, Drawer, and main content
   return (
-    <div className="flex min-h-screen bg-base-100" data-theme="dark">
+    <div className="flex h-screen bg-base-100 overflow-hidden" data-theme="dark">
       {/* Top navigation bar */}
       <header className="fixed top-0 left-0 right-0 bg-base-200 z-50">
         <div className="navbar">
@@ -162,7 +162,7 @@ function App() {
       </aside>
 
       {/* Main content, flex:1, centered, no horizontal scroll */}
-      <main className="flex-1 p-4 md:p-8 mt-16 min-h-screen flex flex-col items-center overflow-x-hidden">
+      <main className="flex-1 p-4 md:p-8 mt-16 flex flex-col items-center overflow-x-hidden overflow-y-auto">
         <div className="w-full max-w-4xl min-h-48 mx-auto flex flex-col items-center">
           {selectedMenu === 'dashboard' && <Dashboard role={role} debug={debug} />}
           {selectedMenu === 'logs' && role === 'admin' && jwt && <Logs jwt={jwt} role={role} />}

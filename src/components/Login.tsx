@@ -14,7 +14,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ email, password, setEmail, setPassword, handleLogin, error, apiResponse, dashboardVersion }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-100" data-theme="dark">
+    <div className="h-screen flex items-center justify-center bg-base-100 overflow-hidden" data-theme="dark">
       <div className="card w-96 bg-base-200 shadow-xl">
         <div className="card-body">
           <h2 className="card-title text-center text-base-content mb-6">Notematic Dashboard Login</h2>
